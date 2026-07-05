@@ -159,9 +159,9 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         </p>
       </div>
       <p className="mt-6 text-sm text-muted">
-        Just looking?{" "}
-        <Link href="/dashboard" className="font-medium text-accent hover:underline">
-          Explore the demo
+        Need an invoice right now?{" "}
+        <Link href="/invoice-generator" className="font-medium text-accent hover:underline">
+          Use the free tool
         </Link>
       </p>
     </div>

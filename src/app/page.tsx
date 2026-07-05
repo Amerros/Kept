@@ -79,10 +79,10 @@ export default function LandingPage() {
                     Start free — no card
                   </Link>
                   <Link
-                    href="/dashboard"
+                    href="/invoice-generator"
                     className="group text-base font-semibold text-ink"
                   >
-                    Poke around the live demo{" "}
+                    Try the free invoice tool{" "}
                     <span className="inline-block transition-transform group-hover:translate-x-1">→</span>
                   </Link>
                 </div>
@@ -477,10 +477,10 @@ export default function LandingPage() {
                 Start free — no card
               </Link>
               <Link
-                href="/dashboard"
+                href="/invoice-generator"
                 className="rounded-xl border border-white/20 px-8 py-4 text-base font-semibold transition-colors hover:border-white/50"
               >
-                Explore the demo
+                Try the free invoice tool
               </Link>
             </div>
           </div>
