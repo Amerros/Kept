@@ -106,14 +106,11 @@ export async function getSettings(): Promise<BusinessSettings> {
     .maybeSingle();
   if (bizErr || !business) return DEMO_SETTINGS;
 
-  const [{ data, error }, { data: gmail }] = await Promise.all([
-    supabase.from("lf_settings").select("*").eq("business_id", business.id).maybeSingle(),
-    supabase
-      .from("lf_email_connections")
-      .select("email")
-      .eq("business_id", business.id)
-      .maybeSingle(),
-  ]);
+  const { data, error } = await supabase
+    .from("lf_settings")
+    .select("*")
+    .eq("business_id", business.id)
+    .maybeSingle();
 
   if (error || !data) return DEMO_SETTINGS;
 
@@ -123,7 +120,6 @@ export async function getSettings(): Promise<BusinessSettings> {
     intake_key: business.intake_key,
     plan: business.plan ?? "trial",
     trial_ends_at: business.trial_ends_at ?? null,
-    gmail_connected_email: gmail?.email ?? null,
     instant_reply_enabled: data.instant_reply_enabled,
     instant_reply_channel: data.instant_reply_channel,
     instant_reply_template: data.instant_reply_template,

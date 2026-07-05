@@ -313,7 +313,6 @@ export const DEMO_SETTINGS: BusinessSettings = {
   intake_key: "demo1234abcd5678",
   plan: "trial",
   trial_ends_at: inHours(24 * 2),
-  gmail_connected_email: null,
   instant_reply_enabled: false,
   instant_reply_channel: "email",
   instant_reply_template:

@@ -8,7 +8,7 @@ import type { Plan } from "./types";
  * Tiers:
  *   Solo (€9)      — capture, instant alerts, default reminders, invoices, pipeline
  *   Standard (€29) — + editable reminder sequence, lead notes, CSV export
- *   Pro (€49)      — + "send as your own email" (Gmail), priority + early access
+ *   Pro (€49)      — + revenue analytics, VAT summary, weekly digest, overdue alerts
  *
  * During an active trial the owner gets full (Pro) access so they can try
  * everything. Once the trial expires without paying, they fall back to Solo.
@@ -23,7 +23,6 @@ export type Feature =
   | "custom_templates"
   | "page_customize"
   | "invoice_csv"
-  | "gmail_send"
   | "weekly_digest"
   | "revenue_analytics"
   | "vat_summary"
@@ -40,7 +39,6 @@ const FEATURE_MIN_RANK: Record<Feature, number> = {
   custom_templates: 2,
   page_customize: 2,
   invoice_csv: 2,
-  gmail_send: 3,
   weekly_digest: 3,
   revenue_analytics: 3,
   vat_summary: 3,
@@ -57,7 +55,6 @@ export const FEATURE_MIN_PLAN: Record<Feature, "Standard" | "Pro"> = {
   custom_templates: "Standard",
   page_customize: "Standard",
   invoice_csv: "Standard",
-  gmail_send: "Pro",
   weekly_digest: "Pro",
   revenue_analytics: "Pro",
   vat_summary: "Pro",

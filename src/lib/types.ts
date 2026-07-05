@@ -53,7 +53,6 @@ export interface BusinessSettings {
   intake_key: string;
   plan: Plan;
   trial_ends_at: string | null;
-  gmail_connected_email: string | null;
   instant_reply_enabled: boolean;
   instant_reply_channel: Channel;
   instant_reply_template: string;

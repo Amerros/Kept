@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useSyncExternalStore, useTransition } from "react";
-import { disconnectGmail, saveSettings } from "@/app/dashboard/settings/actions";
+import { saveSettings } from "@/app/dashboard/settings/actions";
 import { formatDelay, nowMs } from "@/lib/format";
 import { planAllows } from "@/lib/plan";
 import type { BusinessSettings, Channel, FollowupStep, Plan } from "@/lib/types";
@@ -106,25 +106,20 @@ function intakeSnippet(origin: string, intakeKey: string): string {
 export function SettingsForm({
   initialSettings,
   initialSteps,
-  googleReady = false,
   paymentLinks = { solo: "", standard: "", pro: "" },
 }: {
   initialSettings: BusinessSettings;
   initialSteps: FollowupStep[];
-  googleReady?: boolean;
   paymentLinks?: { solo: string; standard: string; pro: string };
 }) {
   const [s, setS] = useState(initialSettings);
   const [steps, setSteps] = useState(initialSteps);
   const [saved, setSaved] = useState<null | "ok" | "demo" | string>(null);
   const [copied, setCopied] = useState(false);
-  const [gmailError, setGmailError] = useState<string | null>(null);
   const [pending, startTransition] = useTransition();
-  const [gmailPending, startGmailTransition] = useTransition();
   const nowClient = nowMs();
 
   const canEditSequence = planAllows(s.plan, "custom_sequence", s.trial_ends_at);
-  const canConnectGmail = planAllows(s.plan, "gmail_send", s.trial_ends_at);
   const canEditTemplates = planAllows(s.plan, "custom_templates", s.trial_ends_at);
   const canWeeklyDigest = planAllows(s.plan, "weekly_digest", s.trial_ends_at);
 
@@ -135,14 +130,6 @@ export function SettingsForm({
       reply_templates: prev.reply_templates.map((t, j) => (j === i ? value : t)),
     }));
   };
-
-  function handleDisconnectGmail() {
-    startGmailTransition(async () => {
-      const res = await disconnectGmail();
-      if (!res.ok) setGmailError(res.error);
-      else setS((prev) => ({ ...prev, gmail_connected_email: null }));
-    });
-  }
 
   // Hydration-safe: server renders a placeholder, client swaps in the real origin.
   const origin = useSyncExternalStore(
@@ -563,62 +550,9 @@ export function SettingsForm({
       </Section>
 
       <Section
-        title="Send as your own email"
-        badge={canConnectGmail ? undefined : <PlanBadge tier="Pro" />}
-        blurb="Connect your Gmail and Kept will send email as you (from your real address) — never reading your inbox, only sending. This powers the customer auto-replies launching soon."
-      >
-        {!s.gmail_connected_email && !canConnectGmail ? (
-          <div className="rounded-xl border border-dashed border-accent/40 bg-accent-wash p-4 text-sm text-ink-2">
-            Sending from your own Gmail is a <strong>Pro</strong> feature.{" "}
-            <a href="#billing" className="font-semibold text-accent hover:underline">
-              Upgrade to connect →
-            </a>
-          </div>
-        ) : s.gmail_connected_email ? (
-          <div className="flex flex-wrap items-center justify-between gap-3 rounded-xl border border-hairline bg-raised p-4">
-            <div>
-              <p className="text-sm font-semibold text-ink">
-                ✓ Connected as {s.gmail_connected_email}
-              </p>
-              <p className="text-xs text-muted">Send-only access. Disconnect any time.</p>
-            </div>
-            <button
-              type="button"
-              onClick={handleDisconnectGmail}
-              disabled={gmailPending}
-              className="rounded-lg border border-hairline px-3.5 py-2 text-xs font-semibold text-danger transition-colors hover:border-danger disabled:opacity-50"
-            >
-              {gmailPending ? "…" : "Disconnect"}
-            </button>
-          </div>
-        ) : googleReady ? (
-          <a
-            href="/api/google/connect"
-            className="inline-flex items-center gap-2 rounded-xl border border-hairline bg-raised px-5 py-2.5 text-sm font-semibold text-ink transition-colors hover:border-accent hover:text-accent"
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" aria-hidden>
-              <path fill="#4285F4" d="M23.5 12.3c0-.9-.1-1.5-.3-2.3H12v4.5h6.5c-.1 1.1-.8 2.7-2.4 3.8l3.7 2.9c2.2-2 3.7-5 3.7-8.9Z" />
-              <path fill="#34A853" d="M12 24c3.2 0 6-1 8-2.9l-3.8-2.9c-1 .7-2.4 1.2-4.2 1.2-3.2 0-6-2.1-6.9-5.1H1.2v3C3.2 21.3 7.3 24 12 24Z" />
-              <path fill="#FBBC05" d="M5.1 14.3a7 7 0 0 1 0-4.6v-3H1.2a12 12 0 0 0 0 10.7l3.9-3.1Z" />
-              <path fill="#EA4335" d="M12 4.7c1.8 0 3 .8 3.7 1.4l2.7-2.7C16.7 1.3 14.2 0 12 0 7.3 0 3.2 2.7 1.2 6.7l3.9 3C6 6.7 8.8 4.7 12 4.7Z" />
-            </svg>
-            Connect Gmail
-          </a>
-        ) : (
-          <p className="rounded-xl border border-dashed border-hairline p-4 text-sm text-muted">
-            Add <code className="font-mono text-xs">GOOGLE_CLIENT_ID</code> and{" "}
-            <code className="font-mono text-xs">GOOGLE_CLIENT_SECRET</code> to{" "}
-            <code className="font-mono text-xs">.env.local</code> to enable Gmail connect
-            (Google Cloud Console → OAuth client, scope <em>gmail.send</em>).
-          </p>
-        )}
-        {gmailError && <p className="text-xs text-danger">{gmailError}</p>}
-      </Section>
-
-      <Section
         title="Customer auto-replies"
         badge={<ComingSoon />}
-        blurb="Instant replies and follow-ups to the lead themselves — sent from your connected email above. In this version Kept only contacts you; auto-replies launch as a premium add-on."
+        blurb="Instant replies and follow-ups to the lead themselves. In this version Kept only contacts you; auto-replies launch as a premium add-on."
       >
         <div className="flex items-center justify-between gap-4 opacity-60">
           <span className="text-sm font-medium">Reply instantly to every new lead</span>

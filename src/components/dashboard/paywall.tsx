@@ -33,7 +33,7 @@ export function Paywall({
       name: "Pro",
       price: "€49",
       link: paymentLinks.pro,
-      blurb: "+ send as your Gmail, weekly digest, revenue analytics.",
+      blurb: "+ revenue analytics, VAT summary, weekly digest, overdue alerts.",
       featured: false,
     },
   ];

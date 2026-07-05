@@ -90,21 +90,3 @@ export async function saveSettings(settings: BusinessSettings, steps: FollowupSt
   revalidatePath("/dashboard/settings");
   return { ok: true as const, demo: false };
 }
-
-/** Remove the owner's Gmail connection (revokes nothing at Google; send-only scope). */
-export async function disconnectGmail() {
-  const supabase = await getServerSupabase();
-  if (!supabase) return { ok: true as const, demo: true };
-
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return { ok: false as const, error: "Not signed in" };
-
-  // RLS limits the delete to the owner's own row.
-  const { error } = await supabase.from("lf_email_connections").delete().neq("provider", "");
-  if (error) return { ok: false as const, error: error.message };
-
-  revalidatePath("/dashboard/settings");
-  return { ok: true as const, demo: false };
-}

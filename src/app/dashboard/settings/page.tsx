@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { SettingsForm } from "@/components/dashboard/settings-form";
 import { getFollowupSteps, getSettings } from "@/lib/data";
-import { isGoogleConfigured } from "@/lib/google";
 
 export const metadata: Metadata = { title: "Settings" };
 
@@ -25,7 +24,6 @@ export default async function SettingsPage() {
       <SettingsForm
         initialSettings={settings}
         initialSteps={steps}
-        googleReady={isGoogleConfigured}
         paymentLinks={paymentLinks}
       />
     </div>
