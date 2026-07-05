@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Kept — never lose a lead again
 
-## Getting Started
+Lead follow-up & invoicing for solo service businesses.
 
-First, run the development server:
+Kept captures leads (website form, manual entry), **alerts the owner instantly**,
+keeps reminding them at **1 h / 24 h / 3 days** until the lead is answered or closed,
+tracks everything in a four-column pipeline (**New → Contacted → Won → Lost**),
+and makes clean, print-ready **invoices in under a minute** — including a free
+public invoice generator at `/invoice-generator` (no account needed).
+
+> **v1 is owner-only:** Kept only ever emails *you*, the owner. Auto-replies and
+> follow-ups to customers (email / WhatsApp / SMS) are schema-ready but disabled
+> until a later version.
+
+## Stack
+
+- **Next.js 16** (App Router, React 19, Tailwind v4)
+- **Supabase** (Postgres + Auth + RLS) — schema in `supabase/migrations/`
+- Owner notifications via **Resend** (optional; everything degrades gracefully)
+
+> The Supabase project is **shared with other apps**. Every Kept object is
+> prefixed `lf_` (tables, functions, triggers) and the signup trigger only
+> provisions users whose metadata carries `lf_app: "kept"` — other apps'
+> tables, functions and signups are never touched.
+
+## Run it (demo mode — zero setup)
 
 ```bash
+npm install
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open http://localhost:3000. Without Supabase keys the app runs in **demo mode**:
+dashboard, pipeline, lead details, invoices and settings are fully browsable
+with sample data.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Go live
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. Fill in the Supabase URL + keys in `.env.local`.
+2. Apply the schema — either paste `supabase/migrations/20260704000000_init.sql`
+   into the Supabase dashboard **SQL editor**, or:
+   ```bash
+   npx supabase login
+   npx supabase link --project-ref <your-ref>
+   npx supabase db push
+   ```
+3. Restart `npm run dev` — signup now provisions a business with the default
+   owner-reminder sequence (see `lf_handle_new_user()` in the migration).
+4. Optional: set `RESEND_API_KEY` for real owner-alert emails, and hit
+   `GET /api/cron` (header `Authorization: Bearer $CRON_SECRET`) every few
+   minutes to deliver due reminders.
 
-## Learn More
+## Project map
 
-To learn more about Next.js, take a look at the following resources:
+| Path | What |
+|---|---|
+| `src/app/page.tsx` | Marketing landing page |
+| `src/app/invoice-generator` | Free public invoice maker (no account) |
+| `src/app/login`, `src/app/signup` | Auth (Supabase, demo-aware) |
+| `src/proxy.ts` | Session refresh + `/dashboard` auth guard |
+| `src/app/dashboard` | KPI tiles, 14-day trend, pipeline, quick-add, CSV export |
+| `src/app/dashboard/leads/[id]` | Lead detail: conversation, reminders, notes |
+| `src/app/dashboard/invoices` | Invoice list / editor / print (PDF via browser) |
+| `src/app/dashboard/settings` | Alerts, reminder sequence, capture-form snippet, invoice defaults |
+| `src/app/api/intake` | Public lead intake (embeddable form posts here) |
+| `src/app/api/cron` | Follow-up worker — owner reminders only in v1 |
+| `src/lib/data.ts` | Data layer — Supabase queries with demo-data fallback |
+| `supabase/migrations/` | Full `lf_*` schema: businesses, leads, follow_ups, messages, invoices, RLS |
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Roadmap
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- [ ] Customer auto-replies + follow-ups (Resend to leads, templates already stored)
+- [ ] Twilio adapter (WhatsApp inbound webhook + WhatsApp/SMS sends)
+- [ ] Email invoices straight to clients
+- [ ] Stripe billing (€9 / €29 / €49)

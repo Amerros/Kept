@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* Kept design tokens — light (warm neutrals + validated blue accent) */
+  --background: #f9f9f7;
+  --surface: #fcfcfb;
+  --surface-raised: #ffffff;
+  --ink: #0b0b0b;
+  --ink-2: #52514e;
+  --muted: #898781;
+  --hairline: #e1e0d9;
+  --border-ring: rgba(11, 11, 11, 0.1);
+  --accent: #2a78d6;
+  --accent-strong: #1c5cab;
+  --accent-wash: #eaf2fc;
+  --good: #006300;
+  --good-badge: #0ca30c;
+  --danger: #d03b3b;
+  --warning: #eda100;
+  --grid: #e1e0d9;
+  --baseline: #c3c2b7;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #0d0d0d;
+    --surface: #1a1a19;
+    --surface-raised: #232322;
+    --ink: #ffffff;
+    --ink-2: #c3c2b7;
+    --muted: #898781;
+    --hairline: #2c2c2a;
+    --border-ring: rgba(255, 255, 255, 0.1);
+    --accent: #3987e5;
+    --accent-strong: #6da7ec;
+    --accent-wash: #16243a;
+    --good: #0ca30c;
+    --good-badge: #0ca30c;
+    --danger: #e66767;
+    --warning: #c98500;
+    --grid: #2c2c2a;
+    --baseline: #383835;
   }
+}
+
+:root {
+  /* marketing-only accents */
+  --marker: #ffdf57;
+  --marker-ink: #0b0b0b;
+  --ink-panel: #101211;
+  --ink-panel-text: #f5f4ef;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --marker: #f2c94c;
+    --marker-ink: #0b0b0b;
+    --ink-panel: #060707;
+    --ink-panel-text: #f5f4ef;
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-raised: var(--surface-raised);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-muted: var(--muted);
+  --color-hairline: var(--hairline);
+  --color-accent: var(--accent);
+  --color-accent-strong: var(--accent-strong);
+  --color-accent-wash: var(--accent-wash);
+  --color-good: var(--good);
+  --color-good-badge: var(--good-badge);
+  --color-danger: var(--danger);
+  --color-warning: var(--warning);
+  --color-marker: var(--marker);
+  --color-marker-ink: var(--marker-ink);
+  --color-ink-panel: var(--ink-panel);
+  --color-ink-panel-text: var(--ink-panel-text);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
 }
 
 body {
   background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background: var(--accent);
+  color: #fff;
+}
+
+/* ── Marketing personality layer ─────────────────────────────── */
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), system-ui, sans-serif;
+}
+
+/* Highlighter swipe behind a word — like a marker on paper. */
+.marker {
+  background: linear-gradient(104deg, transparent 0.5%, var(--marker) 3%, var(--marker) 97%, transparent 99%);
+  color: var(--marker-ink);
+  padding: 0.05em 0.25em;
+  margin: 0 -0.05em;
+  border-radius: 0.15em;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+/* Dotted paper grid for hero backdrop. */
+.dot-grid {
+  background-image: radial-gradient(var(--hairline) 1.1px, transparent 1.1px);
+  background-size: 22px 22px;
+  mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+  -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 20%, black 30%, transparent 75%);
+}
+
+/* Entrance animation, staggered via --d. */
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(14px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-up {
+  animation: fade-up 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+  animation-delay: var(--d, 0s);
+}
+
+/* Infinite marquee strip. */
+@keyframes marquee {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+.marquee-track {
+  animation: marquee 28s linear infinite;
+}
+
+/* Gentle float for hero cards. */
+@keyframes float-soft {
+  0%, 100% { transform: translateY(0) rotate(var(--r, 0deg)); }
+  50% { transform: translateY(-6px) rotate(var(--r, 0deg)); }
+}
+.float-soft {
+  animation: float-soft 5.5s ease-in-out infinite;
+  animation-delay: var(--d, 0s);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-up, .marquee-track, .float-soft {
+    animation: none;
+  }
+}
+
+/* ── Invoice printing: print only the document, nothing else ── */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .invoice-sheet,
+  .invoice-sheet * {
+    visibility: visible;
+  }
+  .invoice-sheet {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: none !important;
+    border-radius: 0 !important;
+    box-shadow: none !important;
+  }
+  .print-hidden {
+    display: none !important;
+  }
 }
