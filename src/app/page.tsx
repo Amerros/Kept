@@ -64,7 +64,7 @@ export default function LandingPage() {
                   className="fade-up mt-7 max-w-lg text-lg leading-relaxed text-ink-2"
                   style={{ "--d": "0.16s" } as React.CSSProperties}
                 >
-                  An instant alert for every enquiry, reminders at 1&nbsp;hour, 24&nbsp;hours
+                  An instant alert for every enquiry, reminders at 24&nbsp;hours, 48&nbsp;hours
                   and 3&nbsp;days until you&apos;ve replied, and invoices done in a minute.
                   No CRM manual. No sales-team ceremony.
                 </p>
@@ -133,7 +133,7 @@ export default function LandingPage() {
                   style={{ "--r": "-2deg", "--d": "1.6s" } as React.CSSProperties}
                 >
                   <p className="text-xs font-semibold text-ink">⏰ Reminders queued</p>
-                  <p className="text-[11px] text-muted">in 1 h · then 24 h · then 3 days</p>
+                  <p className="text-[11px] text-muted">in 24 h · then 48 h · then 3 days</p>
                 </div>
               </div>
             </div>
@@ -225,7 +225,7 @@ export default function LandingPage() {
               {
                 n: "02",
                 title: "Get pinged, then chased",
-                body: "An instant alert with their message and number, then reminders at 1 h, 24 h and 3 days — until you reply or close it.",
+                body: "An instant alert with their message and number, then reminders at 24 h, 48 h and 3 days — until you reply or close it.",
               },
               {
                 n: "03",
@@ -259,7 +259,7 @@ export default function LandingPage() {
             <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
               {[
                 ["⚡", "Instant new-lead alerts", "The second someone enquires, their message and number land in your inbox — on a ladder, in traffic, or asleep."],
-                ["🔁", "Relentless reminders", "1 h / 24 h / 3 d by default. Kept keeps nudging you until every lead is replied to or closed — never lets you forget."],
+                ["🔁", "Relentless reminders", "24 h / 48 h / 3 d by default. Kept keeps nudging you until every lead is replied to or closed — never lets you forget."],
                 ["🧾", "Invoices in a minute", "Client, a few line items, done. Auto-numbered, VAT handled, discounts, paid-tracking, print-ready PDFs."],
                 ["📨", "Send as your own email", "Connect Gmail once and Kept sends from your real address — send-only, it never reads your inbox."],
                 ["📋", "Four-column pipeline", "New → Contacted → Won → Lost. That's the whole methodology. Learn it in nine seconds."],

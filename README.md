@@ -3,7 +3,7 @@
 Lead follow-up & invoicing for solo service businesses.
 
 Kept captures leads (website form, manual entry), **alerts the owner instantly**,
-keeps reminding them at **1 h / 24 h / 3 days** until the lead is answered or closed,
+keeps reminding them at **24 h / 48 h / 3 days** until the lead is answered or closed,
 tracks everything in a four-column pipeline (**New → Contacted → Won → Lost**),
 and makes clean, print-ready **invoices in under a minute** — including a free
 public invoice generator at `/invoice-generator` (no account needed).

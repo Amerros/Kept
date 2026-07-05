@@ -288,12 +288,14 @@ begin
   values (new_business_id, new.email);
 
   -- Default 3-step sequence — v1 is owner-only, so every step is a reminder
-  -- to the owner (no messages go to the lead).
+  -- to the owner (no messages go to the lead). Timed at 24h/48h/3d rather
+  -- than 1h/24h/3d: the cron worker runs at most once a day on Hobby-tier
+  -- Vercel, so a sub-day first reminder isn't realistic to deliver on time.
   insert into public.lf_followup_steps (business_id, step_order, delay_minutes, channel, template) values
-    (new_business_id, 1, 60,   'reminder',
-      '{{name}} enquired an hour ago and hasn''t heard back from you yet. A quick reply now wins the job.'),
-    (new_business_id, 2, 1440, 'reminder',
-      'It''s been a day since {{name}} reached out. Leads go cold fast — call or message them today.'),
+    (new_business_id, 1, 1440, 'reminder',
+      '{{name}} enquired yesterday and hasn''t heard back from you yet. A quick reply now wins the job.'),
+    (new_business_id, 2, 2880, 'reminder',
+      'It''s been 2 days since {{name}} reached out. Leads go cold fast — call or message them today.'),
     (new_business_id, 3, 4320, 'reminder',
       '{{name}} has been open for 3 days. Follow up one more time or mark them as lost.');
 

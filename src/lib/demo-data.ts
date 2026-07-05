@@ -216,7 +216,7 @@ export const DEMO_MESSAGES: Message[] = [
     lead_id: "lead-04",
     direction: "outbound",
     channel: "reminder",
-    body: "Jeroen de Wit enquired an hour ago and hasn't heard back from you yet. A quick reply now wins the job.",
+    body: "Jeroen de Wit enquired yesterday and hasn't heard back from you yet. A quick reply now wins the job.",
     status: "sent",
     created_at: hoursAgo(25),
   },
@@ -256,8 +256,8 @@ export const DEMO_FOLLOWUPS: FollowUp[] = [
     kind: "reminder",
     channel: "reminder",
     template:
-      "{{name}} enquired an hour ago and hasn't heard back from you yet. A quick reply now wins the job.",
-    run_at: inHours(0.6),
+      "{{name}} enquired yesterday and hasn't heard back from you yet. A quick reply now wins the job.",
+    run_at: inHours(15),
     status: "pending",
   },
   {
@@ -265,8 +265,8 @@ export const DEMO_FOLLOWUPS: FollowUp[] = [
     lead_id: "lead-01",
     kind: "reminder",
     channel: "reminder",
-    template: "It's been a day since {{name}} reached out. Leads go cold fast — call or message them today.",
-    run_at: inHours(23.6),
+    template: "It's been 2 days since {{name}} reached out. Leads go cold fast — call or message them today.",
+    run_at: inHours(39),
     status: "pending",
   },
   {
@@ -283,7 +283,7 @@ export const DEMO_FOLLOWUPS: FollowUp[] = [
     lead_id: "lead-02",
     kind: "reminder",
     channel: "reminder",
-    template: "{{name}} enquired an hour ago and hasn't heard back from you yet.",
+    template: "{{name}} enquired yesterday and hasn't heard back from you yet.",
     run_at: hoursAgo(1.5),
     status: "sent",
   },
@@ -292,8 +292,8 @@ export const DEMO_FOLLOWUPS: FollowUp[] = [
     lead_id: "lead-02",
     kind: "reminder",
     channel: "reminder",
-    template: "It's been a day since {{name}} reached out. Leads go cold fast.",
-    run_at: inHours(21.5),
+    template: "It's been 2 days since {{name}} reached out. Leads go cold fast.",
+    run_at: inHours(45.5),
     status: "pending",
   },
   {
@@ -301,7 +301,7 @@ export const DEMO_FOLLOWUPS: FollowUp[] = [
     lead_id: "lead-04",
     kind: "reminder",
     channel: "reminder",
-    template: "It's been a day since {{name}} reached out.",
+    template: "It's been 2 days since {{name}} reached out.",
     run_at: inHours(0),
     status: "cancelled",
   },
@@ -347,19 +347,19 @@ export const DEMO_STEPS: FollowupStep[] = [
   {
     id: "step-1",
     step_order: 1,
-    delay_minutes: 60,
+    delay_minutes: 1440,
     channel: "reminder",
     template:
-      "{{name}} enquired an hour ago and hasn't heard back from you yet. A quick reply now wins the job.",
+      "{{name}} enquired yesterday and hasn't heard back from you yet. A quick reply now wins the job.",
     enabled: true,
   },
   {
     id: "step-2",
     step_order: 2,
-    delay_minutes: 1440,
+    delay_minutes: 2880,
     channel: "reminder",
     template:
-      "It's been a day since {{name}} reached out. Leads go cold fast — call or message them today.",
+      "It's been 2 days since {{name}} reached out. Leads go cold fast — call or message them today.",
     enabled: true,
   },
   {
