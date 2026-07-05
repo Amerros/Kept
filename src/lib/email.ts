@@ -8,7 +8,9 @@
  */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY ?? "";
-const EMAIL_FROM = process.env.EMAIL_FROM || "Kept <onboarding@resend.dev>";
+// rkept.com is a verified Resend sending domain, so this default works in prod
+// even if the EMAIL_FROM env var is unset. Override it to change the from-name.
+const EMAIL_FROM = process.env.EMAIL_FROM || "Kept <hello@rkept.com>";
 
 export type SendResult =
   | { sent: true; providerId: string | null }
