@@ -5,17 +5,20 @@ import { PipelineBoard } from "@/components/dashboard/pipeline-board";
 import { SourceInsights } from "@/components/dashboard/source-insights";
 import { StatTile } from "@/components/dashboard/stat-tile";
 import Link from "next/link";
-import { getLeads, getLeadsPerDay, getPlanContext } from "@/lib/data";
+import { Onboarding } from "@/components/dashboard/onboarding";
+import { getInvoices, getLeads, getLeadsPerDay, getPlanContext, getSettings } from "@/lib/data";
 import { formatDateTime, nowMs } from "@/lib/format";
 import { planAllows } from "@/lib/plan";
 
 export const metadata: Metadata = { title: "Leads" };
 
 export default async function DashboardPage() {
-  const [leads, perDay, { plan, trialEndsAt }] = await Promise.all([
+  const [leads, perDay, { plan, trialEndsAt }, invoices, settings] = await Promise.all([
     getLeads(),
     getLeadsPerDay(),
     getPlanContext(),
+    getInvoices(),
+    getSettings(),
   ]);
   const csvAllowed = planAllows(plan, "csv_export", trialEndsAt);
   const insightsAllowed = planAllows(plan, "source_insights", trialEndsAt);
@@ -46,6 +49,12 @@ export default async function DashboardPage() {
         </div>
         <LeadsToolbar leads={leads} csvAllowed={csvAllowed} />
       </div>
+
+      <Onboarding
+        leadsCount={leads.length}
+        invoicesCount={invoices.length}
+        intakeKey={settings.intake_key}
+      />
 
       {/* KPI row */}
       <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
