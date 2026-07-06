@@ -7,6 +7,7 @@ import {
   deleteInvoice,
   duplicateInvoice,
   setInvoiceStatus,
+  setRecurring,
 } from "@/app/dashboard/invoices/actions";
 import { INVOICE_STATUS_LABELS, type DocType, type InvoiceStatus } from "@/lib/types";
 
@@ -14,10 +15,14 @@ export function InvoiceStatusBar({
   invoiceId,
   status,
   docType = "invoice",
+  recurring = false,
+  recurringAllowed = true,
 }: {
   invoiceId: string;
   status: InvoiceStatus;
   docType?: DocType;
+  recurring?: boolean;
+  recurringAllowed?: boolean;
 }) {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
@@ -80,6 +85,30 @@ export function InvoiceStatusBar({
       >
         Duplicate
       </button>
+      {docType !== "quote" && (
+        <button
+          className={
+            recurring
+              ? "rounded-lg bg-accent-wash px-3.5 py-2 text-xs font-semibold text-accent transition-colors hover:opacity-80 disabled:opacity-50"
+              : btn
+          }
+          disabled={pending}
+          title={
+            recurringAllowed
+              ? "Kept creates next month's copy automatically and emails you"
+              : "Recurring invoices are a Standard feature"
+          }
+          onClick={() =>
+            startTransition(async () => {
+              const res = await setRecurring(invoiceId, !recurring);
+              if (!res.ok) setError(res.error);
+              else router.refresh();
+            })
+          }
+        >
+          {recurring ? "🔁 Repeats monthly ✓" : recurringAllowed ? "Repeat monthly" : "🔒 Repeat monthly"}
+        </button>
+      )}
       {status !== "sent" && status !== "paid" && (
         <button className={btn} disabled={pending} onClick={() => changeStatus("sent")}>
           Mark as sent

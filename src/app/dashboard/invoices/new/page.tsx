@@ -54,6 +54,7 @@ export default async function NewInvoicePage() {
         saveAction={createInvoice}
         saveLabel="Save"
         quotesAllowed={quotesAllowed}
+        priceBook={settings.price_book}
       />
     </div>
   );

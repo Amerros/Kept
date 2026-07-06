@@ -2,9 +2,11 @@ import Link from "next/link";
 import { Logo } from "@/components/logo";
 
 const TRADES = [
-  "plumbers", "cleaners", "photographers", "electricians", "gardeners",
-  "tutors", "painters", "dog groomers", "caterers", "movers", "barbers",
-  "mechanics", "roofers", "personal trainers",
+  "plumbers", "web designers", "cleaners", "photographers", "consultants",
+  "electricians", "copywriters", "gardeners", "tutors", "video editors",
+  "painters", "coaches", "dog groomers", "developers", "caterers", "movers",
+  "barbers", "marketers", "mechanics", "roofers", "personal trainers",
+  "virtual assistants",
 ];
 
 export default function LandingPage() {
@@ -166,7 +168,7 @@ export default function LandingPage() {
               { q: "I lose half my leads because I forget to reply.", r: "-0.6deg" },
               { q: "I reply too late and they already hired someone else.", r: "0.7deg" },
               { q: "CRMs are too complicated. I don't have a sales team — I AM the sales team.", r: "0.5deg" },
-              { q: "I just want something simple that reminds me and follows up.", r: "-0.8deg" },
+              { q: "I pay for a form tool, a CRM, an invoice app AND a reminder app. It's a mess.", r: "-0.8deg" },
             ].map(({ q, r }) => (
               <figure
                 key={q}
@@ -268,6 +270,8 @@ export default function LandingPage() {
                 ["🌐", "No website? No problem", "Kept hosts a mini-site for you — your services + a contact form at your own link. Or paste one snippet into any site you already have."],
                 ["📅", "Appointments & calendar", "Book a date on any lead, see your week at a glance, one click adds it to Google or Apple Calendar."],
                 ["📊", "Insights & revenue analytics", "Lead trend, win rate by source, monthly revenue from paid invoices, and a Monday digest email."],
+                ["🔁", "Recurring invoices", "Monthly contract or retainer? Kept creates next month's invoice automatically — never forget to bill a client again."],
+                ["👥", "Client history, zero admin", "Every person you've talked to or billed, matched up automatically — enquiries, jobs won, and money paid in one view."],
               ].map(([icon, title, body]) => (
                 <div
                   key={title}
@@ -292,6 +296,62 @@ export default function LandingPage() {
           </div>
         </section>
 
+        {/* ── Replace the tool pile ─────────────────────────── */}
+        <section className="mx-auto max-w-6xl px-5 py-24">
+          <p className="text-center font-mono text-xs font-semibold uppercase tracking-[0.2em] text-accent">
+            do the math
+          </p>
+          <h2 className="mt-3 text-center font-display text-3xl font-bold tracking-tight sm:text-5xl">
+            One login instead of <span className="marker">five subscriptions</span>
+          </h2>
+          <p className="mx-auto mt-4 max-w-lg text-center text-ink-2">
+            Most one-person businesses duct-tape this together from separate tools —
+            each with its own bill, login and learning curve.
+          </p>
+          <div className="mx-auto mt-12 grid max-w-4xl gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-hairline bg-surface p-7">
+              <p className="text-sm font-semibold uppercase tracking-wide text-muted">The usual pile</p>
+              <ul className="mt-4 space-y-3 text-[15px] text-ink-2">
+                {[
+                  ["A form / landing-page builder", "~€25/mo"],
+                  ["A CRM for the pipeline", "~€20/mo"],
+                  ["Invoicing software", "~€15/mo"],
+                  ["A scheduling tool", "~€10/mo"],
+                  ["Reminders… in your head", "priceless, unreliable"],
+                ].map(([tool, price]) => (
+                  <li key={tool} className="flex items-baseline justify-between gap-4 border-b border-hairline pb-2.5 last:border-0">
+                    <span>{tool}</span>
+                    <span className="shrink-0 font-mono text-xs text-muted">{price}</span>
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 text-sm font-semibold text-ink">
+                ≈ €70/month · 4 logins · nothing talks to anything
+              </p>
+            </div>
+            <div className="rounded-2xl bg-ink-panel p-7 text-ink-panel-text shadow-xl">
+              <p className="text-sm font-semibold uppercase tracking-wide opacity-60">With Kept</p>
+              <ul className="mt-4 space-y-3 text-[15px]">
+                {[
+                  "Hosted lead page + capture form",
+                  "Pipeline with alerts & reminders built in",
+                  "Quotes, invoices & recurring billing",
+                  "Appointments with calendar export",
+                  "Client history that builds itself",
+                ].map((li) => (
+                  <li key={li} className="flex items-start gap-2.5 border-b border-white/10 pb-2.5 last:border-0">
+                    <span className="text-marker">✓</span>
+                    {li}
+                  </li>
+                ))}
+              </ul>
+              <p className="mt-5 text-sm font-semibold">
+                From €9/month · one login · everything connected
+              </p>
+            </div>
+          </div>
+        </section>
+
         {/* ── Not-a-CRM ─────────────────────────────────────── */}
         <section className="mx-auto max-w-6xl px-5 py-24">
           <div className="grid items-center gap-12 lg:grid-cols-2">
@@ -306,9 +366,9 @@ export default function LandingPage() {
               </h2>
               <p className="mt-6 leading-relaxed text-ink-2">
                 HubSpot, Zoho and Pipedrive are brilliant — for sales teams with managers,
-                quotas and onboarding weeks. You mow lawns, fix boilers, shoot weddings.
-                You need leads answered and followed up. That&apos;s all Kept does,
-                and it does it relentlessly.
+                quotas and onboarding weeks. You mow lawns, fix boilers, design brands,
+                coach clients, shoot weddings. You need leads answered, followed up, and
+                invoiced. That&apos;s all Kept does, and it does it relentlessly.
               </p>
               <ul className="mt-7 space-y-3.5 text-ink">
                 {[
@@ -386,10 +446,11 @@ export default function LandingPage() {
                   blurb: "Run it exactly your way.",
                   features: [
                     "Everything in Solo",
+                    "Recurring invoices for retainers & contracts",
                     "Quotes — convert to invoice when won",
+                    "Price book: your services, one click",
                     "Custom reminder sequence & reply templates",
-                    "Customisable lead page (tagline & services)",
-                    "Private lead notes, lead & invoice CSV",
+                    "Customisable lead page, notes, CSV exports",
                     "Lead source insights & win rates",
                   ],
                   featured: true,

@@ -7,6 +7,7 @@ import { isLockedOut } from "@/lib/plan";
 
 const NAV = [
   { href: "/dashboard", label: "Leads" },
+  { href: "/dashboard/clients", label: "Clients" },
   { href: "/dashboard/invoices", label: "Invoices" },
   { href: "/dashboard/settings", label: "Settings" },
 ];

@@ -71,6 +71,7 @@ export interface BusinessSettings {
   invoice_footer: string;
   reply_templates: string[];
   weekly_digest_enabled: boolean;
+  price_book: PriceBookItem[];
   page_enabled: boolean;
   page_tagline: string;
   page_services: string;
@@ -86,11 +87,18 @@ export interface InvoiceItem {
 
 export type DocType = "invoice" | "quote";
 
+export interface PriceBookItem {
+  description: string;
+  unit_price: number;
+}
+
 export interface Invoice {
   id: string;
   number: string;
   status: InvoiceStatus;
   doc_type: DocType;
+  recurs: "monthly" | null;
+  next_recurrence: string | null;
   client_name: string;
   client_email: string | null;
   client_address: string | null;

@@ -121,6 +121,7 @@ export function SettingsForm({
 
   const canEditSequence = planAllows(s.plan, "custom_sequence", s.trial_ends_at);
   const canEditTemplates = planAllows(s.plan, "custom_templates", s.trial_ends_at);
+  const canPriceBook = planAllows(s.plan, "price_book", s.trial_ends_at);
   const canWeeklyDigest = planAllows(s.plan, "weekly_digest", s.trial_ends_at);
 
   const setTemplate = (i: number, value: string) => {
@@ -497,6 +498,88 @@ export function SettingsForm({
           Your form key: <code className="font-mono">{s.intake_key}</code> — it can only create
           leads, never read your data.
         </p>
+      </Section>
+
+      <Section
+        title="Price book"
+        badge={canPriceBook ? undefined : <PlanBadge tier="Standard" />}
+        blurb="Your usual services and prices — one click drops them into any invoice or quote, so you never retype “Call-out fee — €45” again."
+      >
+        <div className={canPriceBook ? "space-y-2.5" : "pointer-events-none space-y-2.5 opacity-60"}>
+          {s.price_book.map((p, i) => (
+            <div key={i} className="grid grid-cols-[1fr_7rem_1.75rem] items-center gap-2">
+              <input
+                className={inputCls}
+                placeholder="Service (e.g. Call-out & diagnosis)"
+                value={p.description}
+                onChange={(e) => {
+                  setSaved(null);
+                  setS((prev) => ({
+                    ...prev,
+                    price_book: prev.price_book.map((x, j) =>
+                      j === i ? { ...x, description: e.target.value } : x
+                    ),
+                  }));
+                }}
+              />
+              <input
+                className={inputCls + " text-right tabular-nums"}
+                type="number"
+                min={0}
+                step="0.01"
+                aria-label="Price"
+                value={p.unit_price}
+                onChange={(e) => {
+                  setSaved(null);
+                  setS((prev) => ({
+                    ...prev,
+                    price_book: prev.price_book.map((x, j) =>
+                      j === i ? { ...x, unit_price: Number(e.target.value) } : x
+                    ),
+                  }));
+                }}
+              />
+              <button
+                type="button"
+                aria-label="Remove price book item"
+                onClick={() => {
+                  setSaved(null);
+                  setS((prev) => ({
+                    ...prev,
+                    price_book: prev.price_book.filter((_, j) => j !== i),
+                  }));
+                }}
+                className="grid h-7 w-7 place-items-center rounded-lg text-muted transition-colors hover:bg-danger/10 hover:text-danger"
+              >
+                ✕
+              </button>
+            </div>
+          ))}
+          {s.price_book.length < 30 && (
+            <button
+              type="button"
+              onClick={() => {
+                setSaved(null);
+                setS((prev) => ({
+                  ...prev,
+                  price_book: [...prev.price_book, { description: "", unit_price: 0 }],
+                }));
+              }}
+              className="rounded-lg border border-hairline px-3 py-1.5 text-xs font-semibold text-ink transition-colors hover:border-accent hover:text-accent"
+            >
+              + Add service
+            </button>
+          )}
+        </div>
+        {!canPriceBook && (
+          <p className="text-sm text-ink-2">
+            A <strong>Standard</strong> feature —{" "}
+            <a href="#billing" className="font-semibold text-accent hover:underline">
+              upgrade to build your price book
+            </a>
+            .
+          </p>
+        )}
       </Section>
 
       <Section

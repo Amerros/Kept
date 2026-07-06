@@ -140,6 +140,7 @@ export async function getSettings(): Promise<BusinessSettings> {
       ? (data.reply_templates as string[])
       : [],
     weekly_digest_enabled: data.weekly_digest_enabled ?? true,
+    price_book: Array.isArray(data.price_book) ? data.price_book : [],
     page_enabled: data.page_enabled ?? true,
     page_tagline: data.page_tagline ?? "",
     page_services: data.page_services ?? "",
@@ -203,7 +204,7 @@ export async function getLeadsPerDay(): Promise<{ date: string; count: number }[
 }
 
 const INVOICE_COLUMNS =
-  "id,number,status,doc_type,client_name,client_email,client_address,issue_date,due_date,currency,tax_rate,discount,items,notes,paid_at,created_at";
+  "id,number,status,doc_type,recurs,next_recurrence,client_name,client_email,client_address,issue_date,due_date,currency,tax_rate,discount,items,notes,paid_at,created_at";
 
 export async function getInvoices(): Promise<Invoice[]> {
   const supabase = await getServerSupabase();

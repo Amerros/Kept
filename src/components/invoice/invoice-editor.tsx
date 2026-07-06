@@ -4,7 +4,7 @@ import { useState, useTransition } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { InvoiceDocument } from "./invoice-document";
-import type { InvoiceDraft } from "@/lib/types";
+import type { InvoiceDraft, PriceBookItem } from "@/lib/types";
 
 const inputCls =
   "w-full rounded-lg border border-hairline bg-raised px-3 py-2 text-sm outline-none placeholder:text-muted focus:border-accent";
@@ -20,6 +20,7 @@ export function InvoiceEditor({
   saveLabel = "Save invoice",
   freeMode = false,
   quotesAllowed = true,
+  priceBook = [],
 }: {
   initialDraft: InvoiceDraft;
   /** Server action from the dashboard; omitted in the free public generator. */
@@ -27,6 +28,7 @@ export function InvoiceEditor({
   saveLabel?: string;
   freeMode?: boolean;
   quotesAllowed?: boolean;
+  priceBook?: PriceBookItem[];
 }) {
   const router = useRouter();
   const [d, setD] = useState(initialDraft);
@@ -158,15 +160,47 @@ export function InvoiceEditor({
         </section>
 
         <section className="rounded-2xl border border-hairline bg-surface p-5">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-2">
             <h2 className="text-sm font-semibold text-ink">Line items</h2>
-            <button
-              type="button"
-              onClick={addItem}
-              className="rounded-lg border border-hairline px-2.5 py-1 text-xs font-semibold text-ink transition-colors hover:border-accent hover:text-accent"
-            >
-              + Add item
-            </button>
+            <div className="flex items-center gap-2">
+              {priceBook.length > 0 && (
+                <select
+                  className="max-w-44 rounded-lg border border-hairline bg-raised px-2 py-1 text-xs outline-none focus:border-accent"
+                  value=""
+                  aria-label="Add from price book"
+                  onChange={(e) => {
+                    const item = priceBook[Number(e.target.value)];
+                    if (!item) return;
+                    setSaved(null);
+                    setD((prev) => {
+                      // Replace a single still-empty row instead of stacking under it.
+                      const items =
+                        prev.items.length === 1 && !prev.items[0].description && !prev.items[0].unit_price
+                          ? []
+                          : prev.items;
+                      return {
+                        ...prev,
+                        items: [...items, { description: item.description, qty: 1, unit_price: item.unit_price }],
+                      };
+                    });
+                  }}
+                >
+                  <option value="">＋ From price book…</option>
+                  {priceBook.map((p, i) => (
+                    <option key={i} value={i}>
+                      {p.description} — {p.unit_price}
+                    </option>
+                  ))}
+                </select>
+              )}
+              <button
+                type="button"
+                onClick={addItem}
+                className="rounded-lg border border-hairline px-2.5 py-1 text-xs font-semibold text-ink transition-colors hover:border-accent hover:text-accent"
+              >
+                + Add item
+              </button>
+            </div>
           </div>
           <div className="mt-4 space-y-3">
             {d.items.map((it, i) => (

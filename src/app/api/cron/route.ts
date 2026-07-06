@@ -258,6 +258,84 @@ export async function GET(request: Request) {
     if (result.sent) overdueAlerts++;
   }
 
+  // ── Recurring invoices (Standard+): generate next month's copy ────────────
+  let recurred = 0;
+  const { data: recurringDue } = await supabase
+    .from("lf_invoices")
+    .select("*")
+    .eq("recurs", "monthly")
+    .lte("next_recurrence", today)
+    .limit(50);
+
+  for (const src of recurringDue ?? []) {
+    const { data: biz } = await supabase
+      .from("lf_businesses")
+      .select("name,plan,trial_ends_at")
+      .eq("id", src.business_id)
+      .maybeSingle();
+    const trialActive =
+      biz?.plan === "trial" && biz.trial_ends_at && new Date(biz.trial_ends_at) > new Date();
+    const allowed = biz && (biz.plan === "standard" || biz.plan === "pro" || trialActive);
+
+    // Push the schedule forward regardless, so a paused/expired account
+    // doesn't generate a backlog of copies the day they upgrade.
+    const nextDate = new Date(src.next_recurrence + "T00:00:00Z");
+    nextDate.setUTCMonth(nextDate.getUTCMonth() + 1);
+    await supabase
+      .from("lf_invoices")
+      .update({ next_recurrence: nextDate.toISOString().slice(0, 10) })
+      .eq("id", src.id);
+    if (!allowed) continue;
+
+    const { count } = await supabase
+      .from("lf_invoices")
+      .select("id", { count: "exact", head: true })
+      .eq("business_id", src.business_id);
+    const prefix = ((src.number as string).replace(/-?\d+$/, "") || "INV").replace(/-$/, "");
+    const number = `${prefix}-${String((count ?? 0) + 1).padStart(4, "0")}`;
+    const due = new Date(Date.now() + 14 * 86_400_000).toISOString().slice(0, 10);
+
+    const { data: copy, error: copyErr } = await supabase
+      .from("lf_invoices")
+      .insert({
+        business_id: src.business_id,
+        doc_type: "invoice",
+        number,
+        status: "draft",
+        client_name: src.client_name,
+        client_email: src.client_email,
+        client_address: src.client_address,
+        issue_date: today,
+        due_date: due,
+        currency: src.currency,
+        tax_rate: src.tax_rate,
+        discount: src.discount,
+        items: src.items,
+        notes: src.notes,
+      })
+      .select("id")
+      .single();
+    if (copyErr) continue;
+
+    const { data: st } = await supabase
+      .from("lf_settings")
+      .select("notify_email")
+      .eq("business_id", src.business_id)
+      .maybeSingle();
+    if (st?.notify_email) {
+      await sendOwnerEmail({
+        to: st.notify_email,
+        subject: `Recurring invoice ready: ${number} for ${src.client_name || "your client"}`,
+        text: [
+          `Kept just created this month's invoice for ${src.client_name || "your client"} (repeats monthly).`,
+          "",
+          `Review and send it: ${process.env.APP_URL || "https://rkept.com"}/dashboard/invoices/${copy.id}`,
+        ].join("\n"),
+      });
+    }
+    recurred++;
+  }
+
   return Response.json({
     ok: true,
     processed: (due ?? []).length,
@@ -267,5 +345,6 @@ export async function GET(request: Request) {
     failed,
     digests,
     overdueAlerts,
+    recurred,
   });
 }

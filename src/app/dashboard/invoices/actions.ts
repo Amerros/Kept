@@ -113,6 +113,41 @@ export async function setInvoiceStatus(id: string, status: InvoiceStatus) {
   return { ok: true as const };
 }
 
+/** Toggle monthly recurrence: the daily cron creates next month's copy automatically. */
+export async function setRecurring(id: string, on: boolean) {
+  const supabase = await getServerSupabase();
+  if (!supabase) return { ok: true as const, demo: true };
+
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return { ok: false as const, error: "Not signed in" };
+
+  if (on) {
+    const { plan, trialEndsAt } = await getPlanContext();
+    if (!planAllows(plan, "recurring_invoices", trialEndsAt)) {
+      return { ok: false as const, error: upgradeMessage("recurring_invoices") };
+    }
+  }
+
+  // First copy lands one month from today.
+  const next = new Date();
+  next.setMonth(next.getMonth() + 1);
+
+  const { error } = await supabase
+    .from("lf_invoices")
+    .update(
+      on
+        ? { recurs: "monthly", next_recurrence: next.toISOString().slice(0, 10) }
+        : { recurs: null, next_recurrence: null }
+    )
+    .eq("id", id);
+  if (error) return { ok: false as const, error: error.message };
+
+  revalidatePath(`/dashboard/invoices/${id}`);
+  return { ok: true as const };
+}
+
 /** One-click copy: new draft with the next available number, same everything else. */
 export async function duplicateInvoice(id: string) {
   const supabase = await getServerSupabase();

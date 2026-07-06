@@ -59,6 +59,17 @@ export async function saveSettings(settings: BusinessSettings, steps: FollowupSt
         .slice(0, 5),
       weekly_digest_enabled: settings.weekly_digest_enabled,
       page_enabled: settings.page_enabled,
+      ...(planAllows(plan, "price_book", trialEndsAt)
+        ? {
+            price_book: (settings.price_book ?? [])
+              .map((p) => ({
+                description: p.description?.trim() ?? "",
+                unit_price: Number(p.unit_price) || 0,
+              }))
+              .filter((p) => p.description)
+              .slice(0, 30),
+          }
+        : {}),
       // Customising the hosted page is Standard+; Solo keeps name + form only.
       ...(planAllows(plan, "page_customize", trialEndsAt)
         ? {

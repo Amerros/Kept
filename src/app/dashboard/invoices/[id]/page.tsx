@@ -23,6 +23,7 @@ export default async function InvoiceDetailPage({
   ]);
   if (!invoice) notFound();
   const quotesAllowed = planAllows(plan, "quotes", trialEndsAt);
+  const recurringAllowed = planAllows(plan, "recurring_invoices", trialEndsAt);
 
   const initialDraft: InvoiceDraft = {
     doc_type: invoice.doc_type ?? "invoice",
@@ -57,12 +58,19 @@ export default async function InvoiceDetailPage({
           {invoice.doc_type === "quote" ? "Quote" : "Invoice"} {invoice.number}
         </h1>
       </div>
-      <InvoiceStatusBar invoiceId={invoice.id} status={invoice.status} docType={invoice.doc_type} />
+      <InvoiceStatusBar
+        invoiceId={invoice.id}
+        status={invoice.status}
+        docType={invoice.doc_type}
+        recurring={invoice.recurs === "monthly"}
+        recurringAllowed={recurringAllowed}
+      />
       <InvoiceEditor
         initialDraft={initialDraft}
         saveAction={saveAction}
         saveLabel="Save changes"
         quotesAllowed={quotesAllowed}
+        priceBook={settings.price_book}
       />
     </div>
   );

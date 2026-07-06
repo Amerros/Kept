@@ -23,6 +23,8 @@ export type Feature =
   | "custom_templates"
   | "page_customize"
   | "invoice_csv"
+  | "recurring_invoices"
+  | "price_book"
   | "weekly_digest"
   | "revenue_analytics"
   | "vat_summary"
@@ -39,6 +41,8 @@ const FEATURE_MIN_RANK: Record<Feature, number> = {
   custom_templates: 2,
   page_customize: 2,
   invoice_csv: 2,
+  recurring_invoices: 2,
+  price_book: 2,
   weekly_digest: 3,
   revenue_analytics: 3,
   vat_summary: 3,
@@ -55,6 +59,8 @@ export const FEATURE_MIN_PLAN: Record<Feature, "Standard" | "Pro"> = {
   custom_templates: "Standard",
   page_customize: "Standard",
   invoice_csv: "Standard",
+  recurring_invoices: "Standard",
+  price_book: "Standard",
   weekly_digest: "Pro",
   revenue_analytics: "Pro",
   vat_summary: "Pro",
