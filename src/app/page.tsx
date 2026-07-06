@@ -1,5 +1,29 @@
+import type { Metadata } from "next";
 import Link from "next/link";
 import { Logo } from "@/components/logo";
+
+export const metadata: Metadata = {
+  alternates: { canonical: "/" },
+};
+
+/** Structured data for Google rich results — honest values only (no ratings). */
+const JSON_LD = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Kept",
+  url: "https://www.rkept.com",
+  applicationCategory: "BusinessApplication",
+  operatingSystem: "Web",
+  description:
+    "Lead follow-up and invoicing for one-person businesses: instant new-lead alerts, reminders until you reply, quotes, invoices, recurring billing and a hosted lead page.",
+  offers: {
+    "@type": "AggregateOffer",
+    priceCurrency: "USD",
+    lowPrice: "9",
+    highPrice: "49",
+    offerCount: "3",
+  },
+};
 
 const TRADES = [
   "plumbers", "web designers", "cleaners", "photographers", "consultants",
@@ -12,6 +36,10 @@ const TRADES = [
 export default function LandingPage() {
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(JSON_LD) }}
+      />
       {/* ── Nav ─────────────────────────────────────────────── */}
       <header className="sticky top-0 z-40 border-b border-hairline bg-background/80 backdrop-blur-md">
         <nav className="mx-auto flex h-16 max-w-6xl items-center justify-between px-5">

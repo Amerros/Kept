@@ -6,9 +6,16 @@ import { isoDateWithOffset } from "@/lib/format";
 import type { InvoiceDraft } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Free invoice generator",
+  title: "Free Invoice Generator — No Signup, No Watermark",
   description:
-    "Make a clean, professional invoice in under a minute — free, no account, no watermark. Print it or save it as a PDF.",
+    "Make a professional invoice in under a minute, free. No account, no watermark, no catch — VAT and totals calculated for you. Print or save as PDF in your browser.",
+  alternates: { canonical: "/invoice-generator" },
+  openGraph: {
+    title: "Free Invoice Generator — No Signup, No Watermark · Kept",
+    description:
+      "Make a professional invoice in under a minute, free. VAT handled, print-ready PDF, nothing leaves your browser.",
+    url: "https://www.rkept.com/invoice-generator",
+  },
 };
 
 export default function InvoiceGeneratorPage() {

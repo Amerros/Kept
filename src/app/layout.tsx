@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Bricolage_Grotesque, Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -18,13 +18,51 @@ const display = Bricolage_Grotesque({
   weight: ["500", "600", "700", "800"],
 });
 
+const SITE_URL = "https://www.rkept.com";
+const SITE_TITLE = "Kept — Never Lose a Lead: Follow-Up Reminders & Invoicing";
+const SITE_DESCRIPTION =
+  "Kept captures every lead, reminds you until you've replied, and turns won jobs into quotes and invoices. Built for solo trades & freelancers. Free 3-day trial, from $9/mo.";
+
 export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
   title: {
-    default: "Kept — never lose a lead again",
+    default: SITE_TITLE,
     template: "%s · Kept",
   },
-  description:
-    "Kept answers every enquiry instantly, follows up automatically at 1 hour, 24 hours and 3 days, and reminds you before a lead goes cold. Built for solo service businesses.",
+  description: SITE_DESCRIPTION,
+  applicationName: "Kept",
+  keywords: [
+    "lead follow-up software",
+    "lead management for small business",
+    "never lose a lead",
+    "invoicing for freelancers",
+    "invoice software for tradesmen",
+    "CRM for one-person business",
+    "quote to invoice",
+    "recurring invoices",
+    "free invoice generator",
+  ],
+  robots: { index: true, follow: true },
+  openGraph: {
+    type: "website",
+    url: SITE_URL,
+    siteName: "Kept",
+    locale: "en_US",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: SITE_TITLE,
+    description: SITE_DESCRIPTION,
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#f9f9f7" },
+    { media: "(prefers-color-scheme: dark)", color: "#0d0d0d" },
+  ],
 };
 
 export default function RootLayout({
