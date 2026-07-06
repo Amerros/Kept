@@ -313,10 +313,10 @@ export default function LandingPage() {
               <p className="text-sm font-semibold uppercase tracking-wide text-muted">The usual pile</p>
               <ul className="mt-4 space-y-3 text-[15px] text-ink-2">
                 {[
-                  ["A form / landing-page builder", "~€25/mo"],
-                  ["A CRM for the pipeline", "~€20/mo"],
-                  ["Invoicing software", "~€15/mo"],
-                  ["A scheduling tool", "~€10/mo"],
+                  ["A form / landing-page builder", "~$25/mo"],
+                  ["A CRM for the pipeline", "~$20/mo"],
+                  ["Invoicing software", "~$15/mo"],
+                  ["A scheduling tool", "~$10/mo"],
                   ["Reminders… in your head", "priceless, unreliable"],
                 ].map(([tool, price]) => (
                   <li key={tool} className="flex items-baseline justify-between gap-4 border-b border-hairline pb-2.5 last:border-0">
@@ -326,7 +326,7 @@ export default function LandingPage() {
                 ))}
               </ul>
               <p className="mt-5 text-sm font-semibold text-ink">
-                ≈ €70/month · 4 logins · nothing talks to anything
+                ≈ $70/month · 4 logins · nothing talks to anything
               </p>
             </div>
             <div className="rounded-2xl bg-ink-panel p-7 text-ink-panel-text shadow-xl">
@@ -346,7 +346,7 @@ export default function LandingPage() {
                 ))}
               </ul>
               <p className="mt-5 text-sm font-semibold">
-                From €9/month · one login · everything connected
+                From $9/month · one login · everything connected
               </p>
             </div>
           </div>
@@ -397,7 +397,7 @@ export default function LandingPage() {
                     ["Time to first follow-up", "Instant", "After you build workflows"],
                     ["Setup", "~10 minutes", "Days to weeks"],
                     ["Made for", "One busy owner", "Sales teams"],
-                    ["Monthly cost", "From €9", "€50–€800+"],
+                    ["Monthly cost", "From $9", "$50–$800+"],
                   ].map(([label, kept, crm]) => (
                     <tr key={label} className="border-b border-hairline last:border-0">
                       <td className="p-4 font-medium text-ink">{label}</td>
@@ -428,7 +428,7 @@ export default function LandingPage() {
               {[
                 {
                   name: "Solo",
-                  price: "€9",
+                  price: "$9",
                   blurb: "The essentials, forever simple.",
                   features: [
                     "Hosted lead page + website form capture",
@@ -442,7 +442,7 @@ export default function LandingPage() {
                 },
                 {
                   name: "Standard",
-                  price: "€29",
+                  price: "$29",
                   blurb: "Run it exactly your way.",
                   features: [
                     "Everything in Solo",
@@ -457,7 +457,7 @@ export default function LandingPage() {
                 },
                 {
                   name: "Pro",
-                  price: "€49",
+                  price: "$49",
                   blurb: "Know your numbers. Get paid.",
                   features: [
                     "Everything in Standard",

@@ -8,9 +8,9 @@ import type { BusinessSettings, Channel, FollowupStep, Plan } from "@/lib/types"
 
 const PLAN_LABELS: Record<Plan, string> = {
   trial: "Free trial",
-  solo: "Solo — €9/mo",
-  standard: "Standard — €29/mo",
-  pro: "Pro — €49/mo",
+  solo: "Solo — $9/mo",
+  standard: "Standard — $29/mo",
+  pro: "Pro — $49/mo",
 };
 
 const inputCls =
@@ -565,7 +565,7 @@ export function SettingsForm({
       <Section
         title="Price book"
         badge={canPriceBook ? undefined : <PlanBadge tier="Standard" />}
-        blurb="Your usual services and prices — one click drops them into any invoice or quote, so you never retype “Call-out fee — €45” again."
+        blurb="Your usual services and prices — one click drops them into any invoice or quote, so you never retype “Call-out fee — $45” again."
       >
         <div className={canPriceBook ? "space-y-2.5" : "pointer-events-none space-y-2.5 opacity-60"}>
           {s.price_book.map((p, i) => (
@@ -729,9 +729,9 @@ export function SettingsForm({
           <div className="grid gap-3 sm:grid-cols-3">
             {(
               [
-                ["solo", "Solo", "€9/mo", paymentLinks.solo],
-                ["standard", "Standard", "€29/mo", paymentLinks.standard],
-                ["pro", "Pro", "€49/mo", paymentLinks.pro],
+                ["solo", "Solo", "$9/mo", paymentLinks.solo],
+                ["standard", "Standard", "$29/mo", paymentLinks.standard],
+                ["pro", "Pro", "$49/mo", paymentLinks.pro],
               ] as const
             ).map(([plan, name, price, link]) =>
               link ? (

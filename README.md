@@ -72,4 +72,4 @@ with sample data.
 - [ ] Customer auto-replies + follow-ups (Resend to leads, templates already stored)
 - [ ] Twilio adapter (WhatsApp inbound webhook + WhatsApp/SMS sends)
 - [ ] Email invoices straight to clients
-- [ ] Stripe billing (€9 / €29 / €49)
+- [x] Stripe billing ($9 / $29 / $49)

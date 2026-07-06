@@ -17,21 +17,21 @@ export function Paywall({
   const plans = [
     {
       name: "Solo",
-      price: "€9",
+      price: "$9",
       link: paymentLinks.solo,
       blurb: "Alerts, reminders, pipeline, unlimited invoices.",
       featured: false,
     },
     {
       name: "Standard",
-      price: "€29",
+      price: "$29",
       link: paymentLinks.standard,
       blurb: "+ custom sequences, quotes, notes, CSV, insights.",
       featured: true,
     },
     {
       name: "Pro",
-      price: "€49",
+      price: "$49",
       link: paymentLinks.pro,
       blurb: "+ revenue analytics, VAT summary, weekly digest, overdue alerts.",
       featured: false,

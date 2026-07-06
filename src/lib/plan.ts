@@ -6,9 +6,9 @@ import type { Plan } from "./types";
  * SMS, customer auto-replies) are marketing-only "coming soon" until they ship.
  *
  * Tiers:
- *   Solo (€9)      — capture, instant alerts, default reminders, invoices, pipeline
- *   Standard (€29) — + editable reminder sequence, lead notes, CSV export
- *   Pro (€49)      — + revenue analytics, VAT summary, weekly digest, overdue alerts
+ *   Solo ($9)      — capture, instant alerts, default reminders, invoices, pipeline
+ *   Standard ($29) — + editable reminder sequence, lead notes, CSV export
+ *   Pro ($49)      — + revenue analytics, VAT summary, weekly digest, overdue alerts
  *
  * During an active trial the owner gets full (Pro) access so they can try
  * everything. Once the trial expires without paying, they fall back to Solo.
