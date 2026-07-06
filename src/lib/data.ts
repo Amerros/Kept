@@ -102,7 +102,7 @@ export async function getSettings(): Promise<BusinessSettings> {
 
   const { data: business, error: bizErr } = await supabase
     .from("lf_businesses")
-    .select("id,name,intake_key,plan,trial_ends_at")
+    .select("id,name,intake_key,calendar_key,plan,trial_ends_at")
     .maybeSingle();
   if (bizErr || !business) return DEMO_SETTINGS;
 
@@ -118,6 +118,8 @@ export async function getSettings(): Promise<BusinessSettings> {
     business_id: business.id,
     business_name: business.name,
     intake_key: business.intake_key,
+    calendar_key: business.calendar_key ?? "",
+    webhook_url: data.webhook_url ?? "",
     plan: business.plan ?? "trial",
     trial_ends_at: business.trial_ends_at ?? null,
     instant_reply_enabled: data.instant_reply_enabled,

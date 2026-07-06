@@ -311,6 +311,8 @@ export const DEMO_SETTINGS: BusinessSettings = {
   business_id: "demo-business",
   business_name: "Van Dijk Home Services",
   intake_key: "demo1234abcd5678",
+  calendar_key: "demofeed1234abcd",
+  webhook_url: "",
   plan: "trial",
   trial_ends_at: inHours(24 * 2),
   instant_reply_enabled: false,

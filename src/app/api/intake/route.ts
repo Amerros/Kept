@@ -93,9 +93,37 @@ export async function POST(request: Request) {
 
   const { data: settings } = await supabase
     .from("lf_settings")
-    .select("new_lead_alert_enabled,reminder_enabled,reminder_delay_minutes,notify_email")
+    .select("new_lead_alert_enabled,reminder_enabled,reminder_delay_minutes,notify_email,webhook_url")
     .eq("business_id", business.id)
     .maybeSingle();
+
+  // Outbound webhook (Pro): POST the new lead to the owner's URL — connects
+  // Zapier/Make/n8n or anything custom. Fire-and-forget with a short timeout
+  // so a slow endpoint can never delay the lead capture itself.
+  if (settings?.webhook_url && /^https?:\/\//.test(settings.webhook_url)) {
+    try {
+      await fetch(settings.webhook_url, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        signal: AbortSignal.timeout(3000),
+        body: JSON.stringify({
+          event: "lead.created",
+          business: business.name,
+          lead: {
+            id: lead.id,
+            name: name || null,
+            email: fields.email?.trim() || null,
+            phone: fields.phone?.trim() || null,
+            message: fields.message?.trim().slice(0, 4000) || null,
+            source,
+            created_at: new Date().toISOString(),
+          },
+        }),
+      });
+    } catch {
+      /* webhook failures never block lead capture */
+    }
+  }
 
   const leadLabel = lead.name || fields.email?.trim() || fields.phone?.trim() || "A new lead";
 

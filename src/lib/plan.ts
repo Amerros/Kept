@@ -25,6 +25,7 @@ export type Feature =
   | "invoice_csv"
   | "recurring_invoices"
   | "price_book"
+  | "webhook"
   | "weekly_digest"
   | "revenue_analytics"
   | "vat_summary"
@@ -43,6 +44,7 @@ const FEATURE_MIN_RANK: Record<Feature, number> = {
   invoice_csv: 2,
   recurring_invoices: 2,
   price_book: 2,
+  webhook: 3,
   weekly_digest: 3,
   revenue_analytics: 3,
   vat_summary: 3,
@@ -61,6 +63,7 @@ export const FEATURE_MIN_PLAN: Record<Feature, "Standard" | "Pro"> = {
   invoice_csv: "Standard",
   recurring_invoices: "Standard",
   price_book: "Standard",
+  webhook: "Pro",
   weekly_digest: "Pro",
   revenue_analytics: "Pro",
   vat_summary: "Pro",

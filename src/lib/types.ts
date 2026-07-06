@@ -51,6 +51,8 @@ export interface BusinessSettings {
   business_id: string;
   business_name: string;
   intake_key: string;
+  calendar_key: string;
+  webhook_url: string;
   plan: Plan;
   trial_ends_at: string | null;
   instant_reply_enabled: boolean;

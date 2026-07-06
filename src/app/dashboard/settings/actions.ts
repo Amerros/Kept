@@ -59,6 +59,9 @@ export async function saveSettings(settings: BusinessSettings, steps: FollowupSt
         .slice(0, 5),
       weekly_digest_enabled: settings.weekly_digest_enabled,
       page_enabled: settings.page_enabled,
+      ...(planAllows(plan, "webhook", trialEndsAt)
+        ? { webhook_url: settings.webhook_url?.trim() || null }
+        : {}),
       ...(planAllows(plan, "price_book", trialEndsAt)
         ? {
             price_book: (settings.price_book ?? [])

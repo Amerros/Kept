@@ -122,6 +122,7 @@ export function SettingsForm({
   const canEditSequence = planAllows(s.plan, "custom_sequence", s.trial_ends_at);
   const canEditTemplates = planAllows(s.plan, "custom_templates", s.trial_ends_at);
   const canPriceBook = planAllows(s.plan, "price_book", s.trial_ends_at);
+  const canWebhook = planAllows(s.plan, "webhook", s.trial_ends_at);
   const canWeeklyDigest = planAllows(s.plan, "weekly_digest", s.trial_ends_at);
 
   const setTemplate = (i: number, value: string) => {
@@ -498,6 +499,67 @@ export function SettingsForm({
           Your form key: <code className="font-mono">{s.intake_key}</code> — it can only create
           leads, never read your data.
         </p>
+      </Section>
+
+      <Section
+        title="Calendar sync"
+        blurb="Subscribe once and every appointment you book in Kept appears in your calendar automatically — Google, Apple or Outlook."
+      >
+        <div className="flex flex-wrap items-center gap-2.5">
+          <code className="max-w-full overflow-x-auto rounded-lg border border-hairline bg-raised px-3 py-2 font-mono text-xs text-ink">
+            {origin}/api/calendar/{s.calendar_key || "…"}
+          </code>
+          <button
+            type="button"
+            onClick={async () => {
+              try {
+                await navigator.clipboard.writeText(`${origin}/api/calendar/${s.calendar_key}`);
+                setCopied(true);
+                setTimeout(() => setCopied(false), 2000);
+              } catch {
+                /* user can select manually */
+              }
+            }}
+            className="rounded-lg border border-hairline px-3 py-2 text-xs font-semibold text-ink transition-colors hover:border-accent hover:text-accent"
+          >
+            {copied ? "Copied ✓" : "Copy"}
+          </button>
+        </div>
+        <p className="text-xs text-muted">
+          Google Calendar: Other calendars → <strong>From URL</strong> → paste. Apple: File →
+          New Calendar Subscription. Keep this link private — it shows appointment details.
+        </p>
+      </Section>
+
+      <Section
+        title="Integrations"
+        badge={canWebhook ? undefined : <PlanBadge tier="Pro" />}
+        blurb="Kept POSTs a JSON payload to this URL the moment a new lead arrives — plug in Zapier, Make, n8n or your own script and connect Kept to 5,000+ apps."
+      >
+        <label className={"block" + (canWebhook ? "" : " pointer-events-none opacity-60")}>
+          <span className="mb-1.5 block text-sm font-medium">Webhook URL</span>
+          <input
+            className={inputCls}
+            type="url"
+            placeholder="https://hooks.zapier.com/hooks/catch/…"
+            value={s.webhook_url}
+            onChange={(e) => set("webhook_url", e.target.value)}
+            disabled={!canWebhook}
+          />
+        </label>
+        {canWebhook ? (
+          <p className="text-xs text-muted">
+            Payload: <code className="font-mono">{`{ event: "lead.created", business, lead: { name, email, phone, message, source } }`}</code>
+          </p>
+        ) : (
+          <p className="text-sm text-ink-2">
+            A <strong>Pro</strong> feature —{" "}
+            <a href="#billing" className="font-semibold text-accent hover:underline">
+              upgrade to connect your tools
+            </a>
+            .
+          </p>
+        )}
       </Section>
 
       <Section
